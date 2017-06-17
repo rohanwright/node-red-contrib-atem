@@ -1,0 +1,12 @@
+{
+    "name"         : "node-red-contrib-atem",
+    "version"      : "0.0.1",
+    "description"  : "Blackmagic ATEM control for node-red",
+    "dependencies": { "atem"
+    },
+    "node-red"     : {
+        "nodes": {
+            "redatem": "atem/atemin.js"
+        }
+    }
+}
