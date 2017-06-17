@@ -1,5 +1,5 @@
 module.exports = function(RED) {
-    function redatem(config) {
+    function atemin(config) {
         RED.nodes.createNode(this,config);
         var node = this;
         
@@ -12,13 +12,23 @@ module.exports = function(RED) {
 			newatem.connect();
 		
 		
-
+		this.status({fill:"blue",shape:"ring",text:"disconnected"});
+		
 		node.on('input', function(msg) {
 			
-			newatem.changeProgramInput(msg.payload);
-			
-			msg.payload = "Hello";
-            node.send(msg);
+			if (newatem.state === "2" ) {
+				this.status({fill:"green",shape:"ring",text:"Connected"});
+				newatem.changeProgramInput(msg.payload);
+
+				msg.payload = "message sent";
+				node.send(msg);
+			} else {
+				newatem.connect();
+				this.warn("ATEM is disconnected");
+				this.status({fill:"red",shape:"ring",text:"disconnected"});
+				msg.payload = "disconnected";
+				node.send(msg);
+			}
 			
         });
 		
@@ -31,5 +41,5 @@ module.exports = function(RED) {
 		
 		
     }
-    RED.nodes.registerType("redatem",redatem);
+    RED.nodes.registerType("atemin",atemin);
 }
