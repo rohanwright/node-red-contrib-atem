@@ -12,7 +12,7 @@ module.exports = function(RED) {
 			newatem.connect();
 		
 		
-		this.status({fill:"blue",shape:"ring",text:"disconnected"});
+		this.status({fill:"blue",shape:"ring",text:"Disconnected"});
 		
 		node.on('input', function(msg) {
 			
@@ -25,7 +25,7 @@ module.exports = function(RED) {
 			} else {
 				newatem.connect();
 				this.warn("ATEM is disconnected");
-				this.status({fill:"red",shape:"ring",text:"disconnected"});
+				this.status({fill:"red",shape:"ring",text:"Disconnected"});
 				msg.payload = "disconnected";
 				node.send(msg);
 			}
@@ -35,7 +35,7 @@ module.exports = function(RED) {
 		
 		
 		node.on('close', function() {
-            //Disconnect from ATEM
+        	newatem.disconnect();
         });
 		
 		
