@@ -18,7 +18,11 @@ module.exports = function(RED) {
 			
 			if (newatem.state === "2" ) {
 				this.status({fill:"green",shape:"ring",text:"Connected"});
-				newatem.changeProgramInput(msg.payload);
+				
+				if (msg.payload.startsWith("program")) {
+					var input = msg.payload.split('-')[1];
+					newatem.changeProgramInput(input);
+				}
 
 				msg.payload = "message sent";
 				node.send(msg);
