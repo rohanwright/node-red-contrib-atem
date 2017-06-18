@@ -4,57 +4,51 @@ module.exports = function(RED) {
         var node = this;
         
 
-		var Atem = require('atem'); // Load the atem module 
-		var newatem = new Atem("10.1.0.9"); // Create a new Atem instace with an IP address 
+		var ATEM = require('applest-atem');
 
+		var atem = new ATEM();
+		atem.connect(config.ip);
 
-		newatem.ip = config.ip;
-		newatem.connect();
+		this.status({fill:"red",shape:"ring",text:"Disconnected"});
 		
-		if (newatem.state === "2" ) {
+		atem.on('connect', function() {
 			this.status({fill:"green",shape:"ring",text:"Connected"});
-		} else {
-			newatem.connect();
+		});
+		atem.on('disconnect', function() {
 			this.warn("ATEM is disconnected");
 			this.status({fill:"red",shape:"ring",text:"Disconnected"});
-		}
+		});	
+			
+		
 		
 		node.on('value', function(msg) {
 			var value;
-			if (newatem.state === "2" ) {
-				this.status({fill:"green",shape:"ring",text:"Connected"});
-				
-				if (msg.payload.startsWith("program")) {
-					value = msg.payload.split(' ')[1];
-					newatem.setProgram(value);
-				}
-				if (msg.payload.startsWith("preview")) {
-					value = msg.payload.split(' ')[1];
-					newatem.setPreview(value);
-				}
-				if (msg.payload === "cut") {
-					newatem.cut();
-				}
-				if (msg.payload === "auto") {
-					newatem.auto();
-				}
-
-				msg.payload = "message sent";
-				node.send(msg);
-			} else {
-				newatem.connect();
-				this.warn("ATEM is disconnected");
-				this.status({fill:"red",shape:"ring",text:"Disconnected"});
-				msg.payload = "disconnected";
-				node.send(msg);
+	
+			if (msg.payload.startsWith("program")) {
+				value = msg.payload.split(' ')[1];
+				atem.changeProgramInput(value);
 			}
+			if (msg.payload.startsWith("preview")) {
+				value = msg.payload.split(' ')[1];
+				atem.changePreviewInput(value);
+			}
+			if (msg.payload === "cut") {
+				atem.cutTransition();
+			}
+			if (msg.payload === "auto") {
+				atem.autoTransition();
+			}
+
+			msg.payload = "";
+			node.send(msg);
+
 			
         });
 		
 		
 		
 		node.on('close', function() {
-        	newatem.disconnect();
+
         });
 		
 		

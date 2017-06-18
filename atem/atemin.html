@@ -4,7 +4,8 @@
         color: '#E9967A',
         defaults: {
             name: {value:""},
-			ip: {value:"192.168.1.10"}
+			ip: {value:"192.168.1.10"},
+			me: {value:"0"}
         },
 		icon: "bridge.png",
         inputs:1,
@@ -21,11 +22,15 @@
         <input type="text" id="node-input-name" placeholder="Name">
 		<label for="node-input-ip"><i class="icon-tag"></i> IP Address</label>
         <input type="text" id="node-input-ip" placeholder="192.168.1.10">
+		<label for="node-input-me"><i class="icon-tag"></i> Which ME would you like to control 0 = ME/1, 1 = ME/2</label>
+        <input type="text" id="node-input-me" placeholder="0">
     </div>
 </script>
 
 <script type="text/x-red" data-help-name="atemin">
     <p>Control Blackmagic ATEM switchers with node-red</p>
+	<p>Set IP and ME Number</p>
+	
 	<h1>Input variables:</h1>
 	<p>n = input/output number</p>
 	<p>Program Input switch: "program n"</p>
