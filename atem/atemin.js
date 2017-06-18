@@ -12,11 +12,11 @@ module.exports = function(RED) {
 		this.status({fill:"red",shape:"ring",text:"Disconnected"});
 		
 		atem.on('connect', function() {
-			this.status({fill:"green",shape:"ring",text:"Connected"});
+			node.status({fill:"green",shape:"ring",text:"Connected"});
 		});
 		atem.on('disconnect', function() {
-			this.warn("ATEM is disconnected");
-			this.status({fill:"red",shape:"ring",text:"Disconnected"});
+			node.warn("ATEM is disconnected");
+			node.status({fill:"red",shape:"ring",text:"Disconnected"});
 		});	
 			
 		var me = config.me;
