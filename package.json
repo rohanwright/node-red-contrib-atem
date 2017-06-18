@@ -27,7 +27,7 @@
 	"homepage": "https://github.com/rohanwright/node-red-contrib-atem#readme",
 	"node-red": {
 		"nodes": {
-			"redatem": "atem/atemin.js",
+			"redatem": "atem/atemin.js"
 		}
 	}
 }
