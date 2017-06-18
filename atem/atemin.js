@@ -19,24 +19,24 @@ module.exports = function(RED) {
 			this.status({fill:"red",shape:"ring",text:"Disconnected"});
 		});	
 			
-		
+		var me = config.me;
 		
 		node.on('value', function(msg) {
 			var value;
 	
 			if (msg.payload.startsWith("program")) {
 				value = msg.payload.split(' ')[1];
-				atem.changeProgramInput(value);
+				atem.changeProgramInput(value, me);
 			}
 			if (msg.payload.startsWith("preview")) {
 				value = msg.payload.split(' ')[1];
-				atem.changePreviewInput(value);
+				atem.changePreviewInput(value, me);
 			}
 			if (msg.payload === "cut") {
-				atem.cutTransition();
+				atem.cutTransition(me);
 			}
 			if (msg.payload === "auto") {
-				atem.autoTransition();
+				atem.autoTransition(me);
 			}
 
 			msg.payload = "";
