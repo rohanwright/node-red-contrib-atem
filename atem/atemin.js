@@ -8,20 +8,35 @@ module.exports = function(RED) {
 		var newatem = new Atem("10.1.0.9"); // Create a new Atem instace with an IP address 
 
 
-			newatem.ip = config.ip;
+		newatem.ip = config.ip;
+		newatem.connect();
+		
+		if (newatem.state === "2" ) {
+			this.status({fill:"green",shape:"ring",text:"Connected"});
+		} else {
 			newatem.connect();
+			this.warn("ATEM is disconnected");
+			this.status({fill:"red",shape:"ring",text:"Disconnected"});
+		}
 		
-		
-		this.status({fill:"blue",shape:"ring",text:"Disconnected"});
-		
-		node.on('input', function(msg) {
-			
+		node.on('value', function(msg) {
+			var value;
 			if (newatem.state === "2" ) {
 				this.status({fill:"green",shape:"ring",text:"Connected"});
 				
 				if (msg.payload.startsWith("program")) {
-					var input = msg.payload.split('-')[1];
-					newatem.changeProgramInput(input);
+					value = msg.payload.split(' ')[1];
+					newatem.setProgram(value);
+				}
+				if (msg.payload.startsWith("preview")) {
+					value = msg.payload.split(' ')[1];
+					newatem.setPreview(value);
+				}
+				if (msg.payload === "cut") {
+					newatem.cut();
+				}
+				if (msg.payload === "auto") {
+					newatem.auto();
 				}
 
 				msg.payload = "message sent";
