@@ -29,15 +29,9 @@ module.exports = function (RED) {
 				shape: "ring",
 				text: "Disconnected"
 			});
-			msg.payload = "disconnected";
-			node.send(msg);
 		});
 
-		atem.on('stateChanged', function (err, state) {
-			console.log(state);
-			msg.payload = state;
-			node.send(msg);
-		});
+
 
 
 		node.on('value', function (msg) {
@@ -108,7 +102,12 @@ module.exports = function (RED) {
 				msg.payload = "command not recognised";
 				node.send(msg);
 			}
-
+			
+			atem.on('stateChanged', function (err, state) {
+				console.log(state);
+				msg.payload = state;
+				node.send(msg);
+			});
 
 		});
 
