@@ -1,36 +1,48 @@
-module.exports = function(RED) {
-    function atemin(config) {
-        RED.nodes.createNode(this,config);
-        var node = this;
-        
+module.exports = function (RED) {
+	function atemin(config) {
+		RED.nodes.createNode(this, config);
+		var node = this;
+
 		var ATEM = require('applest-atem');
 
 		var atem = new ATEM();
 		atem.connect(config.ip);
 
-		this.status({fill:"red",shape:"ring",text:"Disconnected"});
-		
-		atem.on('connect', function() {
-			node.status({fill:"green",shape:"ring",text:"Connected"});
+		this.status({
+			fill: "red",
+			shape: "ring",
+			text: "Disconnected"
 		});
-		
-		atem.on('disconnect', function() {
+
+		atem.on('connect', function () {
+			node.status({
+				fill: "green",
+				shape: "ring",
+				text: "Connected"
+			});
+		});
+
+		atem.on('disconnect', function () {
 			node.warn("ATEM is disconnected");
-			node.status({fill:"red",shape:"ring",text:"Disconnected"});
+			node.status({
+				fill: "red",
+				shape: "ring",
+				text: "Disconnected"
+			});
 			msg.payload = "disconnected";
 			node.send(msg);
-		});	
-		
-		atem.on('stateChanged', function(err, state) {
+		});
+
+		atem.on('stateChanged', function (err, state) {
 			console.log(state);
 			msg.payload = state;
 			node.send(msg);
 		});
-		
-		
-		node.on('value', function(msg) {
-			var value, value2, me, payloadarray[];
-			
+
+
+		node.on('value', function (msg) {
+			var value, value2, me, payloadarray = [];
+
 			if (msg.payload.startsWith("program")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[2]) {
@@ -96,14 +108,14 @@ module.exports = function(RED) {
 				msg.payload = "command not recognised";
 				node.send(msg);
 			}
-			
 
-        });
-		
-		node.on('close', function() {
 
-        });
-		
-    }
-    RED.nodes.registerType("atemin",atemin);
+		});
+
+		node.on('close', function () {
+
+		});
+
+	}
+	RED.nodes.registerType("atemin", atemin);
 }
