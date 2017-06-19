@@ -5,7 +5,6 @@
         defaults: {
             name: {value:""},
 			ip: {value:"192.168.1.10"},
-			me: {value:"0"}
         },
 		icon: "bridge.png",
         inputs:1,
@@ -25,22 +24,25 @@
 		<label for="node-input-ip"><i class="icon-tag"></i> IP Address</label>
         <input type="text" id="node-input-ip" placeholder="192.168.1.10">
     </div>
-	<div class="form-row">
-		<label for="node-input-me"><i class="icon-tag"></i> ME Number</label>
-        <input type="text" id="node-input-me" placeholder="0">
-    </div>
-	<div class="form-tips"><b>Tip:</b> Which ME would you like to control 0 = ME/1, 1 = ME/2</div>
 
 </script>
 
 <script type="text/x-red" data-help-name="atemin">
-    <p>Control Blackmagic ATEM switchers with node-red</p>
-	<p>Set IP and ME Number</p>
+	<h1>Control Blackmagic ATEM switchers with node-red</h1>
+	<p></p>
+	<h3>Commands:</h3>
+	<p>Program Input switch: "program <i>input me</i>"</p>
+	<p>Preview Input switch: "preview <i>input me</i>"</p>
+	<p>Cut Transition: "cut <i>me</i>"</p>
+	<p>Auto Transition: "auto <i>me</i>"</p>
+	<p>Change AUX: "aux <i>aux input</i>"</p>
+	<p>Downstream Keyer on/off: "downstreamkey <i>keyer state</i>"</p>
+	<p>Upstream Keyer on/off: "upstreamkey <i>keyer state me</i>"</p>
+	<p>Run Macro: "macro <i>macro-no</i>"</p>
+	<p></p>
+	<p></p>
+	<h3>Key:</h3>
+	<p>me: 0 = ME/1, 1 = ME/2 (Defaults to ME/1)</p>
+	<p>state: 0 = off, 1 = on</p>
 	
-	<h1>Input variables:</h1>
-	<p>n = input/output number</p>
-	<p>Program Input switch: "program n"</p>
-	<p>Preview Input switch: "preview n"</p>
-	<p>Cut Transition: "cut"</p>
-	<p>Auto Transition: "auto"</p>
 </script>
