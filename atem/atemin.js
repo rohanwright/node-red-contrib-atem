@@ -5,8 +5,8 @@ module.exports = function (RED) {
 
 		var ATEM = require('applest-atem');
 
-		var atem = new ATEM();
-		atem.connect(config.ip);
+		this.atem = new ATEM();
+		this.atem.connect(config.ip);
 
 		this.status({
 			fill: "red",
@@ -14,7 +14,7 @@ module.exports = function (RED) {
 			text: "Disconnected"
 		});
 
-		atem.on('connect', function () {
+		this.atem.on('connect', function () {
 			node.status({
 				fill: "green",
 				shape: "ring",
@@ -22,7 +22,7 @@ module.exports = function (RED) {
 			});
 		});
 
-		atem.on('disconnect', function () {
+		this.atem.on('disconnect', function () {
 			node.warn("ATEM is disconnected");
 			node.status({
 				fill: "red",
@@ -30,13 +30,15 @@ module.exports = function (RED) {
 				text: "Disconnected"
 			});
 		});
+		this.atem.on('stateChanged', function (err, state) {
+			//node.warn(state);
+		});
 
 
 
-
-		node.on('value', function (msg) {
+		this.on('value', function (msg) {
 			var value, value2, me, payloadarray = [];
-
+			
 			if (msg.payload.startsWith("program")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[2]) {
@@ -45,7 +47,9 @@ module.exports = function (RED) {
 					me = 0;
 				}
 				value = payloadarray[1];
-				atem.changeProgramInput(value, me);
+				node.atem.changeProgramInput(value, me);
+				msg.payload = "Change ME/" + me + " Program: " + value;
+				node.send(msg);
 			} else if (msg.payload.startsWith("preview")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[2]) {
@@ -54,7 +58,7 @@ module.exports = function (RED) {
 					me = 0;
 				}
 				value = payloadarray[1];
-				atem.changePreviewInput(value, me);
+				node.atem.changePreviewInput(value, me);
 			} else if (msg.payload.startsWith("cut")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[1]) {
@@ -62,7 +66,7 @@ module.exports = function (RED) {
 				} else {
 					me = 0;
 				}
-				atem.cutTransition(me);
+				node.atem.cutTransition(me);
 			} else if (msg.payload.startsWith("auto")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[1]) {
@@ -70,7 +74,9 @@ module.exports = function (RED) {
 				} else {
 					me = 0;
 				}
-				atem.autoTransition(me);
+				node.atem.autoTransition(me);
+				msg.payload = "Cut on ME/" + me;
+				node.send(msg);
 			} else if (msg.payload.startsWith("aux")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[3]) {
@@ -80,12 +86,12 @@ module.exports = function (RED) {
 				}
 				value = payloadarray[1];
 				value2 = payloadarray[2];
-				atem.changeAuxInput(value, value2, me);
+				node.atem.changeAuxInput(value, value2, me);
 			} else if (msg.payload.startsWith("downstreamkey")) {
 				payloadarray = msg.payload.split(' ');
 				value = payloadarray[1];
 				value2 = payloadarray[2];
-				atem.changeDownstreamKeyOn(value, value2);
+				node.atem.changeDownstreamKeyOn(value, value2);
 			} else if (msg.payload.startsWith("upstreamkey")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[3]) {
@@ -95,23 +101,23 @@ module.exports = function (RED) {
 				}
 				value = payloadarray[1];
 				value2 = payloadarray[2];
-				atem.changeUpstreamKeyState(value, value2, me);
+				node.atem.changeUpstreamKeyState(value, value2, me);
 			} else if (msg.payload.startsWith("macro")) {
-				atem.runMacro(value);
+				node.atem.runMacro(value);
 			} else {
 				msg.payload = "command not recognised";
 				node.send(msg);
 			}
 			
-			atem.on('stateChanged', function (err, state) {
-				console.log(state);
+			/*node.atem.on('stateChanged', function (err, state) {
+				//console.log(state);
 				msg.payload = state;
 				node.send(msg);
 			});
-
+*/
 		});
 
-		node.on('close', function () {
+		this.on('close', function () {
 
 		});
 
