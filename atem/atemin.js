@@ -31,12 +31,13 @@ module.exports = function (RED) {
 			});
 		});
 		this.atem.on('stateChanged', function (err, state) {
-			//node.warn(state);
+			var msg = { payload:state }
+			node.send(msg);
 		});
 
 
 
-		this.on('value', function (msg) {
+	 	this.on('input', function(msg) {
 			var value, value2, me, payloadarray = [];
 			
 			if (msg.payload.startsWith("program")) {
@@ -48,8 +49,6 @@ module.exports = function (RED) {
 				}
 				value = payloadarray[1];
 				node.atem.changeProgramInput(value, me);
-				msg.payload = "Change ME/" + me + " Program: " + value;
-				node.send(msg);
 			} else if (msg.payload.startsWith("preview")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[2]) {
@@ -75,8 +74,6 @@ module.exports = function (RED) {
 					me = 0;
 				}
 				node.atem.autoTransition(me);
-				msg.payload = "Cut on ME/" + me;
-				node.send(msg);
 			} else if (msg.payload.startsWith("aux")) {
 				payloadarray = msg.payload.split(' ');
 				if (payloadarray[3]) {
@@ -109,12 +106,15 @@ module.exports = function (RED) {
 				node.send(msg);
 			}
 			
-			/*node.atem.on('stateChanged', function (err, state) {
+			
+			
+			/*
+			node.atem.on('stateChanged', function (err, state) {
 				//console.log(state);
 				msg.payload = state;
 				node.send(msg);
 			});
-*/
+			*/
 		});
 
 		this.on('close', function () {
